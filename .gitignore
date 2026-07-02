@@ -1,0 +1,16 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Local Claude Code state (per-machine, not shared)
+.claude/settings.local.json
+
+# Scratch / temp
+*.log
+*.tmp
+tmp/
+scratch/
