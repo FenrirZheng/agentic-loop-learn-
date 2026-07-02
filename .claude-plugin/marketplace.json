@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "agentic-loop-learn",
+  "description": "A local marketplace shipping the agentic-prompt-composer plugin: compose robust agentic prompts from control-structure primitives.",
+  "owner": {
+    "name": "fenrir"
+  },
+  "plugins": [
+    {
+      "name": "agentic-prompt-composer",
+      "source": "./",
+      "description": "Compose agentic prompts by selecting and stacking control-structure primitives via a decision-tree workflow.",
+      "keywords": [
+        "agentic",
+        "prompt-engineering",
+        "orchestration"
+      ]
+    }
+  ]
+}
