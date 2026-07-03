@@ -23,6 +23,7 @@ Follow these five steps in order. Do not skip step 1.
 - **Cost / volume?** One-off, or high-volume + cost-sensitive?
 - **Size?** Fits one context, or too big (long doc, whole codebase)?
 - **Interaction?** Needs to observe the environment mid-task (debug, browse), or fully plannable up front?
+- **Horizon & recurrence?** Will the loop run long (> ~5 rounds → needs context curation)? Will this task class recur (→ skill library)? Is the prompt itself the long-lived artifact (→ prompt-optimization loop)?
 
 ### 2. Select primitives
 
@@ -42,6 +43,9 @@ Map the diagnosis to primitives using [references/catalog.md](references/catalog
 | Plannable, no mid-task observation | **ReWOO** / **plan-and-solve** — not ReAct |
 | Must observe env mid-task | **ReAct**; explore+backtrack → **tree-search/LATS** |
 | Want to self-refine, NO oracle | STOP — get an external signal first, or use generate-then-select |
+| Reasoning model available | try the **reasoning-effort knob** first (one call, higher effort) before hand-rolling loops; tier effort per stage |
+| Long horizon (> ~5 rounds) | add **context-curation** (per-round distill) — mandatory, not optional |
+| Task class recurs / prompt is a long-lived asset | **skill-library** / **prompt-optimization loop** |
 
 ### 3. Stack them
 
@@ -54,7 +58,9 @@ Real solutions combine primitives. Pick a composition template from [references/
 First pick the **output mode** — same composition, two renderings:
 
 - **Markdown prompt/spec** (default) — portable; the right form when single-agent primitives dominate (ReAct, plan-and-solve, CoVe live *inside* one agent's reasoning), when the target isn't Claude Code, or when the ask is prompt strengthening rather than orchestration.
-- **Workflow `.mjs` script** — when the target runtime is **Claude Code** and the composition is **multi-agent orchestration** (fan-out, verify stages, loops over agents). The guardrails below then become executable code instead of prose the downstream LLM must obey. Read [references/workflow-mjs.md](references/workflow-mjs.md) for the primitive→construct mapping, script skeleton, runtime rules, and emission checklist.
+- **Workflow `.mjs` script** — when the target runtime is **Claude Code** and the composition is **multi-agent orchestration** (fan-out, verify stages, loops over agents). The guardrails below then become executable code instead of prose the downstream LLM must obey. Read [references/workflow-mjs.md](references/workflow-mjs.md) for the primitive→construct mapping, oracle-in-agent pattern, script skeletons, runtime rules, and emission checklist.
+
+**In both modes, the prompt text itself must meet the writing standard in [references/prompt-quality.md](references/prompt-quality.md)** — seven-part anatomy (role/stance, delimited inputs, procedure, output contract, stop condition, reasoned prohibitions, escape hatch), per-role rules (skeptics default-refute, judges reason-before-score with anchored rubrics, finders carry named lenses + failure scenarios), and the smell test. A perfect composition rendered as vague prose still fails; every `agent()` string in an .mjs script is also an emitted prompt.
 
 Either way, produce the actual artifact with these non-negotiables baked in:
 
@@ -78,9 +84,10 @@ Check the composed prompt against [references/composition-guide.md](references/c
 
 Each primitive has a full example (prompt + why-it-works + pitfalls) in this repo:
 
-- Index of all 39 techniques: [../../index.md](../../index.md)
+- Index of all 43 techniques: [../../index.md](../../index.md)
 - Core families (loop / generate-then-select / adversarial / decompose / search): [../../examples/](../../examples/)
 - Frontier patterns (MoA, ReWOO, CoVe, agentic-RAG, rubric-judge, …): [../../examples/frontier/](../../examples/frontier/)
+- Meta / system-level (reasoning-effort, skill-library, prompt-optimization, context-curation): examples 40–43 in [../../examples/frontier/](../../examples/frontier/)
 - Underlying theory + sources: [../../agentic-loop.md](../../agentic-loop.md)
 
 When the user asks "why does technique X work" or wants to go deeper on one primitive, read its example file rather than re-deriving.

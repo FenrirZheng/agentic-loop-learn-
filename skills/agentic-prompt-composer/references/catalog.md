@@ -38,8 +38,14 @@ The full picker. Each row links to its deep-dive example (prompt + why-it-works 
     → [rubric-based judge](../../../examples/frontier/33-rubric-based-judge.md) (anchored per-item scale).
 17. **Too big for one context**
     → [divide-and-conquer](../../../examples/18-divide-and-conquer.md) (recursive) / [map-reduce](../../../examples/16-map-reduce.md) (one layer).
-18. **Long-horizon agent**
-    → context engineering: [subagent context isolation](../../../examples/frontier/35-subagent-context-isolation.md), pruning, compression.
+18. **Long-horizon (> ~5 rounds) or multi-agent relay**
+    → [context curation](../../../examples/frontier/43-context-curation.md) (per-round distill, verified/dead-ends/open) + [subagent context isolation](../../../examples/frontier/35-subagent-context-isolation.md). Not optional at that length — context rot degrades every other primitive.
+19. **Tempted to hand-roll self-refine / self-consistency on a reasoning model**
+    → first try the [reasoning-effort knob](../../../examples/frontier/40-reasoning-effort.md) (one call, higher effort) as the baseline; still wrap an external oracle. Tier effort per stage instead of raising it globally.
+20. **Same task class recurs across sessions**
+    → [skill library](../../../examples/frontier/41-skill-library.md) (Voyager-style): distill oracle-passed artifacts into retrievable recipes; entry gate = oracle-passed only.
+21. **The prompt itself is the long-lived artifact** (production pipeline, skill, system prompt)
+    → [prompt-optimization loop](../../../examples/frontier/42-prompt-optimization-loop.md) (OPRO-lite: frozen eval set as oracle, propose-from-scored-history, held-out validation).
 
 ## Full primitive table
 
@@ -103,3 +109,11 @@ The full picker. Each row links to its deep-dive example (prompt + why-it-works 
 | least-to-most | easy→hard dependency chain | [29](../../../examples/frontier/29-least-to-most.md) |
 | plan-and-solve | plan then solve (anti skip-step) | [30](../../../examples/frontier/30-plan-and-solve.md) |
 | self-discover | assemble own reasoning structure | [31](../../../examples/frontier/31-self-discover.md) |
+
+### Meta / system-level (compute allocation & cross-task)
+| Primitive | Idea | Example |
+|---|---|---|
+| reasoning-effort knob | tune internal loop depth per call before hand-rolling outer loops; tier by stage | [40](../../../examples/frontier/40-reasoning-effort.md) |
+| skill library | distill oracle-passed artifacts into reusable recipes; compounding across tasks | [41](../../../examples/frontier/41-skill-library.md) |
+| prompt-optimization loop | iterate the prompt (not the answer) against a frozen eval set | [42](../../../examples/frontier/42-prompt-optimization-loop.md) |
+| context curation | per-round distill (verified / dead-ends / open); externalize state; sleep-time pre-digest | [43](../../../examples/frontier/43-context-curation.md) |

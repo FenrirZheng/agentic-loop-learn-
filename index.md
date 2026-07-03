@@ -77,6 +77,17 @@
 | [38 weighted voting](examples/frontier/38-weighted-voting.md) | 二之補（信心加權多數決） |
 | [39 graph-of-thoughts](examples/frontier/39-graph-of-thoughts.md) | 四之補（思路成圖，可合併綜效節點） |
 
+## 六、Meta / 系統層（算力配置與跨任務——在 agent runtime 可落地的）
+
+原本歸在「非 prompt 可表達」的概念中，有四個在現代 agent runtime（如 Claude Code：`effort` 參數、skills 目錄、eval 迴圈、subagent 隔離）其實**可以在 orchestration 層落地**，各補一個可操作範例：
+
+| 範例 | 掛回哪一族 | 一句話 |
+|---|---|---|
+| [40 reasoning-effort 旋鈕](examples/frontier/40-reasoning-effort.md) | 新族 A | 先調內建迴圈深度，別急著手疊；外層仍包 oracle |
+| [41 skill library](examples/frontier/41-skill-library.md) | 新族 E | oracle 認證過的產物沉澱成 recipe，跨任務複利 |
+| [42 prompt optimization loop](examples/frontier/42-prompt-optimization-loop.md) | 新族 B | 迭代 prompt 而非答案；凍結的 eval set 當 oracle |
+| [43 context curation](examples/frontier/43-context-curation.md) | 新族 C+F | 每輪蒸餾狀態防 context rot；長迴圈的地基 |
+
 ---
 
 ## 怎麼選（決策樹）
@@ -93,6 +104,10 @@
 - 路徑可事先寫死 → 用 **workflow**（[plan-then-execute](examples/15-plan-then-execute.md) / [map-reduce](examples/16-map-reduce.md) / [pipeline](examples/17-pipeline.md)），別上 agent。
 - 可事先規劃、不需邊做邊看 → [ReWOO](examples/frontier/28-rewoo.md) / [plan-and-solve](examples/frontier/30-plan-and-solve.md)，別用 [ReAct](examples/19-react.md) 逐步往返。
 - 任務太大 → 先 [decompose](examples/15-plan-then-execute.md) 再對每塊套上面任一種。
+- 想手疊 self-refine / self-consistency，而模型有思考預算旋鈕 → 先試 [reasoning-effort](examples/frontier/40-reasoning-effort.md) 單發調高當基線。
+- 迴圈會超過 ~5 輪 → 必配 [context curation](examples/frontier/43-context-curation.md)（每輪蒸餾），否則 context rot 吃掉一切增益。
+- 同類任務會重複出現 → [skill library](examples/frontier/41-skill-library.md)，oracle 認證過才入庫。
+- prompt 本身是長期資產 → [prompt optimization loop](examples/frontier/42-prompt-optimization-loop.md)。
 
 ## 三個要記住的 meta 洞察
 
@@ -106,13 +121,11 @@
 
 來源文件也涵蓋了一些**不是「寫一個 prompt」就能落地**的概念——它們是訓練方法、系統架構或研究方向，硬編成「prompt 範例」會誤導。這裡誠實列出並指回來源，而不是為湊數而虛構範例：
 
-- **Reasoning models（o1 / o3 / DeepSeek-R1）**：把迴圈用 RLVR **訓進模型權重**；你要調的是 reasoning effort 旋鈕，不是自己疊迴圈。（[新族 A](agentic-loop.md)）
-- **自我改進 / 自動優化 pipeline（DSPy / OPRO / TextGrad）**：迭代的對象是「產生答案的系統」而非答案本身，靠 optimizer/編譯器搜 prompt。（[新族 B](agentic-loop.md)）
 - **Constitutional AI / RLAIF**：把 self-refine 搬到**訓練期**，回饋來自明文憲法。（[三之補(2)](agentic-loop.md)）— 其**工程即時版**才是可 prompt 的 [guardrail feedback loop](examples/frontier/34-guardrail-feedback-loop.md)。
-- **Voyager / skill library**：跨任務累積、把 oracle 認證過的產物沉澱成可重用技能庫；屬系統設計。（[新族 E](agentic-loop.md)）
-- **Sleep-time compute**：把思考從熱路徑移到離線閒置時預先消化 context；屬架構。（[新族 F](agentic-loop.md)）
 - **World models / co-evolving**：agent 自帶能想像後果的模擬器，尚在研究期。（[新族 D](agentic-loop.md)）
 - **PRM / process reward、generative verifier**：屬驗證器/獎勵模型的訓練與設計；其精神已體現在 [until oracle passes](examples/05-until-oracle-passes.md)（逐步驗證）與 [rubric judge](examples/frontier/33-rubric-based-judge.md)。
+
+四個原本列在這裡的概念（reasoning models 的 effort 旋鈕、DSPy/OPRO 式自動優化、Voyager skill library、sleep-time/context 策展）已各自有**orchestration 層的可操作版**，移入上方[第六族](#六meta--系統層算力配置與跨任務在-agent-runtime-可落地的)——訓練期的原始形態仍以 [agentic-loop.md](agentic-loop.md) 為準。
 
 ## 來源
 

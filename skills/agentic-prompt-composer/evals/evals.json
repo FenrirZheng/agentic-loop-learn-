@@ -28,6 +28,20 @@
       "expected_output": "A composition recognizing the input is too big for one context. Should choose map-reduce (slice → parallel per-slice digest → reduce that dedups and flags cross-slice conflicts) escalating to divide-and-conquer (summary of summaries) if the merged digest is still too big, plus subagent context isolation for heavy per-slice work. Matches recipe R6. Must warn against silent truncation (log dropped slices) and preserve key facts/numbers per layer.",
       "files": [],
       "complexity": "medium"
+    },
+    {
+      "id": 5,
+      "prompt": "Write me a runnable Claude Code Workflow script that reviews a git diff for security issues and only reports verified findings.",
+      "expected_output": "A Workflow .mjs script (not a markdown spec) per workflow-mjs.md: pure-literal meta block; fail-closed args check (missing diff/scope throws, logged on line one); diverse finder lenses (each prompt names its lens and what it ignores, not N clones); adversarial-verify with default-refute skeptic prompts and an 'unverifiable' enum escape hatch in the VERDICT schema; votes counted in plain code, not by an agent; explicit stop condition as a while guard (dry rounds + hard cap); .filter(Boolean) on agent results; no Date.now()/Math.random()/TS syntax; a why-this-composition comment. Agent prompt strings should be self-contained and carry an output contract (prompt-quality standard).",
+      "files": [],
+      "complexity": "complex"
+    },
+    {
+      "id": 6,
+      "prompt": "我的 agent 要跑一個很長的 debug 迴圈（可能十幾輪），而且我在用有 thinking budget 的 reasoning model。怎麼設計？",
+      "expected_output": "A composition that (a) suggests trying the reasoning-effort knob first as a baseline before hand-rolling extra refine loops (example 40), with effort tiered per stage rather than raised globally, and an external oracle still wrapped around the model's internal loop; (b) mandates context curation for the long horizon (example 43): per-round distill into VERIFIED (with evidence pointers) / DEAD-ENDS / OPEN / NEXT, discarding raw tool output, plus subagent isolation for heavy searches; (c) keeps an objective stop condition (oracle green / K dry rounds / hard cap), never open-ended.",
+      "files": [],
+      "complexity": "medium"
     }
   ]
 }

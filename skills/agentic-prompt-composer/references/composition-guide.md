@@ -41,5 +41,8 @@ When unsure, bias toward the simpler option:
 - If there's a refine loop, is it grounded in an external signal (or knowingly capped)?
 - Where I fan out, is it genuinely diverse?
 - Could this be a workflow instead of an agent?
+- Could a single higher-effort call replace this hand-rolled loop (reasoning-effort knob), and is effort tiered per stage rather than raised globally?
+- If the loop will run long (> ~5 rounds), is context curation (per-round distill / subagent isolation) built in?
 - Are cost bounds fail-closed and is dropped scope logged?
+- Does the emitted prompt text pass the [prompt-quality smell test](prompt-quality.md#emitted-prompt-smell-test) (output contract, stance, escape hatch, reasoned prohibitions)?
 - Did I name each primitive used and the diagnosis that selected it?
