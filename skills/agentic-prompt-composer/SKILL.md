@@ -1,6 +1,6 @@
 ---
 name: agentic-prompt-composer
-description: Compose a robust agentic prompt or orchestration by selecting and stacking LLM control-structure primitives (loop-until-oracle, self-consistency, best-of-N, adversarial-verify, map-reduce, ReAct, ReWOO, and ~30 more). Use when the user wants to DESIGN or STRENGTHEN a prompt/agent/pipeline — e.g. "help me write a prompt that reliably does X", "組合一個 agentic prompt", "which prompting technique for Y", "make this prompt more reliable / stop it hallucinating", "design an agent loop / pipeline / review workflow for Z", "how should I structure the orchestration for W". Do NOT use for one-shot trivial prompts, for prose polishing (that's english-polish), or for explaining existing code (that's explain-code).
+description: Compose a robust agentic prompt or orchestration by selecting and stacking LLM control-structure primitives (loop-until-oracle, self-consistency, best-of-N, adversarial-verify, map-reduce, ReAct, ReWOO, and ~30 more). Output is a markdown prompt/spec, or — for multi-agent orchestration targeting Claude Code — a runnable Workflow .mjs script. Use when the user wants to DESIGN or STRENGTHEN a prompt/agent/pipeline — e.g. "help me write a prompt that reliably does X", "組合一個 agentic prompt", "which prompting technique for Y", "make this prompt more reliable / stop it hallucinating", "design an agent loop / pipeline / review workflow for Z", "how should I structure the orchestration for W", "write me a Workflow script / dynamic workflow that does V". Do NOT use for one-shot trivial prompts, for prose polishing (that's english-polish), or for explaining existing code (that's explain-code).
 ---
 
 # Agentic Prompt Composer
@@ -49,9 +49,14 @@ Real solutions combine primitives. Pick a composition template from [references/
 
 > fan-out find (map) → **loop-until-dry** (don't miss the tail) → **adversarial-verify** each finding (3 skeptics, majority-refute drops it) → **judge-panel/aggregator** synthesizes.
 
-### 4. Emit the composed prompt
+### 4. Emit the composed artifact
 
-Produce the actual artifact, with these non-negotiables baked in:
+First pick the **output mode** — same composition, two renderings:
+
+- **Markdown prompt/spec** (default) — portable; the right form when single-agent primitives dominate (ReAct, plan-and-solve, CoVe live *inside* one agent's reasoning), when the target isn't Claude Code, or when the ask is prompt strengthening rather than orchestration.
+- **Workflow `.mjs` script** — when the target runtime is **Claude Code** and the composition is **multi-agent orchestration** (fan-out, verify stages, loops over agents). The guardrails below then become executable code instead of prose the downstream LLM must obey. Read [references/workflow-mjs.md](references/workflow-mjs.md) for the primitive→construct mapping, script skeleton, runtime rules, and emission checklist.
+
+Either way, produce the actual artifact with these non-negotiables baked in:
 
 - **Explicit stop condition** (oracle green / K dry rounds / N budget / score ≥ X) — never an open-ended "keep improving".
 - **If any refine loop has no oracle**, attach one (tool/test/retrieval) or state plainly that it's capped at fixed rounds and why.

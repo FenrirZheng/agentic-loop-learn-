@@ -14,3 +14,6 @@ Thumbs.db
 *.tmp
 tmp/
 scratch/
+
+# skill-creator eval workspaces (test runs, baselines, feedback — per-machine)
+skills/*-workspace/
