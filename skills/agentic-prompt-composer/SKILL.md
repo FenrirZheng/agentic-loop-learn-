@@ -55,7 +55,7 @@ Real solutions combine primitives. Pick a composition template from [references/
 
 ### 4. Emit the composed artifact
 
-Emit a **markdown prompt/spec** — portable, copy-pastable; single-agent primitives (ReAct, plan-and-solve, CoVe) live *inside* one agent's reasoning, and multi-agent compositions are rendered as prose orchestration specs. Do not emit a runnable Workflow `.mjs` script unless the user explicitly asks for one; only then read [references/workflow-mjs.md](references/workflow-mjs.md) for the primitive→construct mapping and emission checklist.
+Emit a **markdown prompt/spec** — portable, copy-pastable; single-agent primitives (ReAct, plan-and-solve, CoVe) live *inside* one agent's reasoning, and multi-agent compositions are rendered as prose orchestration specs.
 
 **The prompt text itself must meet the writing standard in [references/prompt-quality.md](references/prompt-quality.md)** — seven-part anatomy (role/stance, delimited inputs, procedure, output contract, stop condition, reasoned prohibitions, escape hatch), per-role rules (skeptics default-refute, judges reason-before-score with anchored rubrics, finders carry named lenses + failure scenarios), and the smell test. A perfect composition rendered as vague prose still fails.
 

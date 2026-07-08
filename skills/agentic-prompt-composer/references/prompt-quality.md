@@ -1,6 +1,6 @@
 # Prompt Quality — writing the emitted text itself
 
-The catalog picks *which* primitives; this file governs *how the emitted prompt text is written*. A perfect composition rendered as vague prose still fails. Apply this to every artifact you emit — markdown specs AND every `agent()` prompt string inside an .mjs script.
+The catalog picks *which* primitives; this file governs *how the emitted prompt text is written*. A perfect composition rendered as vague prose still fails. Apply this to every artifact you emit.
 
 ## Anatomy of a strong agentic prompt
 
@@ -9,7 +9,7 @@ Emit prompts with these seven parts, in roughly this order. Skipping one should 
 1. **Role + stance** — not decoration; the stance sets the prior. A verifier gets "default: this finding is a FALSE ALARM"; a finder gets "assume bugs exist and you haven't found them all yet". Stance is the cheapest behavior knob you have.
 2. **Inputs, explicit and delimited** — every external input appears as a named placeholder (`{{TARGET_DIR}}`, `{{DIFF}}`, `{{FINDING_JSON}}`) inside clear delimiters (fenced block / XML tag). **Fail closed**: state "if {{X}} is empty or missing, STOP and say so — do not guess a value."
 3. **Procedure** — the selected primitives compiled into numbered steps. One step = one action + its observable result. Steps the model tends to skip get an explicit "do not skip" (plan-and-solve's whole reason to exist).
-4. **Output contract** — the exact shape of the answer: field names, order, format, length caps. Prefer a literal skeleton the model fills in over a description of one. In .mjs this is the `schema` opt; in markdown, write the skeleton in a fenced block. A prompt without an output contract cannot be verified by the next stage — and everything you compose has a next stage.
+4. **Output contract** — the exact shape of the answer: field names, order, format, length caps. Prefer a literal skeleton the model fills in over a description of one — write the skeleton in a fenced block. A prompt without an output contract cannot be verified by the next stage — and everything you compose has a next stage.
 5. **Stop condition, stated inside the prompt** — the loop guard also lives in the text the model sees ("repeat until pytest exits 0; paste the real output each round; max 5 rounds").
 6. **Negative constraints** — the 2–4 failure modes this specific composition fears, phrased as prohibitions with the *reason*: "Never claim done without pasting real test output (models report imagined passes)". Reasoned prohibitions survive paraphrase; bare ones get rationalized away.
 7. **Escape hatch** — the honest exit: "If you cannot verify a claim, mark it `UNVERIFIED` — an admitted gap is worth more than a confident guess." Without an escape hatch, the output contract *forces* hallucination when the model has nothing.
