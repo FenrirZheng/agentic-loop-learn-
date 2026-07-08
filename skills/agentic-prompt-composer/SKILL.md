@@ -1,6 +1,6 @@
 ---
 name: agentic-prompt-composer
-description: Compose a robust agentic prompt or orchestration by selecting and stacking LLM control-structure primitives (loop-until-oracle, self-consistency, best-of-N, adversarial-verify, map-reduce, ReAct, ReWOO, and ~30 more). Output is a markdown prompt/spec, or — for multi-agent orchestration targeting Claude Code — a runnable Workflow .mjs script. Use when the user wants to DESIGN or STRENGTHEN a prompt/agent/pipeline — e.g. "help me write a prompt that reliably does X", "組合一個 agentic prompt", "which prompting technique for Y", "make this prompt more reliable / stop it hallucinating", "design an agent loop / pipeline / review workflow for Z", "how should I structure the orchestration for W", "write me a Workflow script / dynamic workflow that does V". Do NOT use for one-shot trivial prompts, for prose polishing (that's english-polish), or for explaining existing code (that's explain-code).
+description: Compose a robust agentic prompt or orchestration by selecting and stacking LLM control-structure primitives (loop-until-oracle, self-consistency, best-of-N, adversarial-verify, map-reduce, ReAct, ReWOO, and ~30 more). Output is a markdown prompt/spec. Use when the user wants to DESIGN or STRENGTHEN a prompt/agent/pipeline — e.g. "help me write a prompt that reliably does X", "組合一個 agentic prompt", "which prompting technique for Y", "make this prompt more reliable / stop it hallucinating", "design an agent loop / pipeline / review workflow for Z", "how should I structure the orchestration for W". Do NOT use for one-shot trivial prompts, for prose polishing (that's english-polish), or for explaining existing code (that's explain-code).
 ---
 
 # Agentic Prompt Composer
@@ -55,12 +55,9 @@ Real solutions combine primitives. Pick a composition template from [references/
 
 ### 4. Emit the composed artifact
 
-First pick the **output mode** — same composition, two renderings:
+Emit a **markdown prompt/spec** — portable, copy-pastable; single-agent primitives (ReAct, plan-and-solve, CoVe) live *inside* one agent's reasoning, and multi-agent compositions are rendered as prose orchestration specs. Do not emit a runnable Workflow `.mjs` script unless the user explicitly asks for one; only then read [references/workflow-mjs.md](references/workflow-mjs.md) for the primitive→construct mapping and emission checklist.
 
-- **Markdown prompt/spec** (default) — portable; the right form when single-agent primitives dominate (ReAct, plan-and-solve, CoVe live *inside* one agent's reasoning), when the target isn't Claude Code, or when the ask is prompt strengthening rather than orchestration.
-- **Workflow `.mjs` script** — when the target runtime is **Claude Code** and the composition is **multi-agent orchestration** (fan-out, verify stages, loops over agents). The guardrails below then become executable code instead of prose the downstream LLM must obey. Read [references/workflow-mjs.md](references/workflow-mjs.md) for the primitive→construct mapping, oracle-in-agent pattern, script skeletons, runtime rules, and emission checklist.
-
-**In both modes, the prompt text itself must meet the writing standard in [references/prompt-quality.md](references/prompt-quality.md)** — seven-part anatomy (role/stance, delimited inputs, procedure, output contract, stop condition, reasoned prohibitions, escape hatch), per-role rules (skeptics default-refute, judges reason-before-score with anchored rubrics, finders carry named lenses + failure scenarios), and the smell test. A perfect composition rendered as vague prose still fails; every `agent()` string in an .mjs script is also an emitted prompt.
+**The prompt text itself must meet the writing standard in [references/prompt-quality.md](references/prompt-quality.md)** — seven-part anatomy (role/stance, delimited inputs, procedure, output contract, stop condition, reasoned prohibitions, escape hatch), per-role rules (skeptics default-refute, judges reason-before-score with anchored rubrics, finders carry named lenses + failure scenarios), and the smell test. A perfect composition rendered as vague prose still fails.
 
 Either way, produce the actual artifact with these non-negotiables baked in:
 

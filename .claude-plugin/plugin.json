@@ -1,7 +1,7 @@
 {
   "name": "agentic-prompt-composer",
   "version": "0.2.0",
-  "description": "Compose robust agentic prompts and runnable Workflow .mjs orchestrations by selecting and stacking LLM control-structure primitives (loops, generate-then-select, adversarial verification, decomposition, search, meta/system-level) via a decision-tree workflow, with a prompt-quality writing standard for the emitted text itself.",
+  "description": "Compose robust agentic prompts and orchestration specs by selecting and stacking LLM control-structure primitives (loops, generate-then-select, adversarial verification, decomposition, search, meta/system-level) via a decision-tree workflow, with a prompt-quality writing standard for the emitted text itself.",
   "author": {
     "name": "fenrir"
   },
