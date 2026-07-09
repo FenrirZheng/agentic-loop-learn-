@@ -4,8 +4,8 @@ A knowledge base of LLM/agentic **control-structure** techniques — and a Claud
 
 ## Two layers
 
-1. **Knowledge base** — 43 techniques, one file each (prompt example + why-it-works + pitfalls), aggregated in [index.md](index.md), grounded in the theory doc [agentic-loop.md](agentic-loop.md).
-   - Core families: [examples/](examples/) · Frontier patterns: [examples/frontier/](examples/frontier/) · Meta/system-level (reasoning-effort, skill-library, prompt-optimization, context-curation): examples 40–43
+1. **Knowledge base** — 53 techniques, one file each (prompt example + why-it-works + pitfalls), aggregated in [index.md](index.md), grounded in the theory doc [agentic-loop.md](agentic-loop.md).
+   - Core families: [examples/](examples/) · Frontier patterns: [examples/frontier/](examples/frontier/) · Meta/system-level (reasoning-effort, skill-library, prompt-optimization, context-curation): examples 40–43 · Boundary & verifier-quality (PAL, abstention, clarify, dry-run, sandbox, dual-LLM, judge-debias, …): examples 44–53 — gap analysis in [import-candidates.md](import-candidates.md)
 2. **Plugin** — [agentic-prompt-composer](skills/agentic-prompt-composer/SKILL.md): a skill + `/agentic-prompt` slash command that diagnoses a task, selects the right primitives, stacks them, and emits a ready-to-run agentic prompt with an explicit stop condition and the anti-degeneration guardrails baked in. The command also saves the result as a pair of markdown files under `./prompts/` — `<slug>.prompt.md` (the pure, paste-ready prompt) and `<slug>.why.md` (the diagnosis and composition rationale).
 
 ## Install the plugin
@@ -46,7 +46,7 @@ skills/agentic-prompt-composer/
     prompt-quality.md   writing standard for the emitted prompt text itself
   evals/evals.json      eval cases for `claude plugin eval`
 commands/agentic-prompt.md   the /agentic-prompt slash command
-examples/               43 technique deep-dives
+examples/               53 technique deep-dives
 index.md                aggregator of the knowledge base
 agentic-loop.md         underlying theory + sources
 ```

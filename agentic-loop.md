@@ -252,3 +252,68 @@ Hill-climbing:每步只接受「比現在好」的修改,否則丟棄。
 - [Rubric-Based Rewards(概念)](https://www.emergentmind.com/topics/rubric-based-rewards) · [LongTraceRL(rubric reward 實例)](https://arxiv.org/abs/2605.31584)
 - [Voyager:Open-Ended Embodied Agent(skill library)](https://arxiv.org/abs/2305.16291)
 - [Sleep-time Compute:Beyond Inference Scaling at Test-time](https://arxiv.org/abs/2504.13171) · [Letta blog](https://www.letta.com/blog/sleep-time-compute/)
+
+---
+
+# 補充三:四個盲區(生成端外包/多樣性、非交付型輸出、副作用安全、驗證器品質)
+
+前兩批補充把積木「往內化、往上自動化、往下打地基」三個方向長;這一批來自一次系統性缺口掃描(見 [import-candidates.md](import-candidates.md)):把 43 招逐一攤開後,缺口不在「再多一種迴圈或挑選法」,而集中在四個結構性盲區。
+
+## 盲區 1:生成端的確定性與多樣性
+
+原文所有「外部訊號」都在驗證端(做完再驗);生成端有兩件事一直沒被處理:
+
+- **PAL / Program-of-Thoughts / CRITIC**:會算錯的子步驟(算術、日期、計數)一開始就外包給直譯器執行,不讓模型心算——外部確定性從驗證端提前到生成端。CRITIC 則是把每一條自我批判都強制接上工具證據,正是補充一警訊(「無外部訊號的自我修正會退化」)的解法。
+- **Verbalized Sampling**:對齊造成 mode collapse(typicality bias——偏好標註系統性偏愛熟悉文本),temperature 調高也救不回多樣性。要求模型「給 N 個答案+各自機率」口頭化分佈,訓練不用改,創意任務多樣性 1.6–2.1×。這補上了「多樣性 > 規模」洞察的生成端工具——整個 generate-then-select 族的前提原來一直懸空。
+
+## 盲區 2:「不答 / 先問」的非交付型輸出策略
+
+原文 43 招全部假設「輸入是明確的、最後要交出一個答案」。兩個反例:
+
+- **一致性棄答閘(semantic entropy / SelfCheckGPT)**:同題獨立 sample N 次、按語意分群,群太散=「模型不知道」的可觀察 proxy → 棄答/升級/標註,而不是硬答。幻覺(confabulation)的行為特徵就是不穩定;語意層級的熵比 token 層級準(Nature 2024)。
+- **Clarify-before-act(ClarifyGPT)**:對需求生 n 份獨立實作跑同組測資,行為不一致=需求歧義的客觀證據 → 只針對分歧點問具體的澄清問題。agent 最貴的失敗是「完美地做對了錯的題」。
+- 這兩招加上原本的 self-consistency,是**同一個積木的三種用途**:sample 多份看散度 → 散度低取眾數(挑答案)、散度高拉警報(棄答)、散度出現在輸入端(測歧義)。
+
+## 盲區 3:副作用世界的安全控制
+
+原文所有招都活在無副作用的文字空間;agent 一旦會改檔案、碰系統、對外發送,需要三道閘:
+
+- **Dry-run + pre-mortem**(新族 D 的工程即時版):不可逆動作前,讓模型當一次世界模型模擬後果,再用 pre-mortem 反轉框架(「假設已失敗,死因?」)繞過確認偏誤。RAP 證明 LLM-as-world-model 在 prompt 層可行。
+- **Sandbox-verify-commit**(交易式執行):隔離環境(git worktree / sandbox)執行 → oracle 驗證 → 綠燈才 merge,紅燈整包丟棄。把 backtracking 的回溯能力從「想法空間」延伸到「動作空間」;也是多 agent 並行改檔的唯一安全形態。
+- **Dual-LLM / CaMeL**(guardrail 的縱深版):特權 LLM(只看可信指令、有工具權、永不讀不可信資料)與隔離 LLM(讀不可信資料、只吐 schema 欄位、零工具權)分離——「檢查內容」防不住對抗性注入,「架構分離」讓注入無處施力。CaMeL 加 capability 追蹤資料流向,AgentDojo 67% 任務可證明安全。
+
+## 盲區 4:驗證器自身的品質
+
+補充一的核心洞察是「回饋訊號品質決定一切」——但原文從未把它應用到回饋源自身:
+
+- **關係式驗證(round-trip / metamorphic)**:驗證訊號不來自另一個 LLM 的意見,而來自任務結構——正向做完反向重建比對等價(RTC);擾動輸入檢查輸出按預期關係變化(metamorphic relations)。客觀性光譜:LLM-judge < 關係式 < 硬 oracle。
+- **Quote-grounded generation**:先逐字抽引文(substring 檢查=免費 oracle)、再只准根據引文作答——把幻覺防治從「事後驗證」提前到「結構上寫不出來」。
+- **Judge 去偏協定**:LLM-as-judge 有方向固定的系統性偏誤(position / verbosity / self-enhancement,MT-Bench 實測連 GPT-4 都有)。系統性偏誤靠結構對消:pairwise 換位跑兩次(不一致=平手)、judge≠generator、盲評、rubric 錨定。裁判壞了,疊在上面的每一招都在放大錯誤訊號。
+
+## 決策樹追加(補充三)
+
+- 子步驟可程式化 → PAL 外包直譯器。
+- 候選趨同 → verbalized sampling 先破 mode collapse。
+- 沒 oracle 怕幻覺、寧可不答 → 一致性棄答閘;任務有可逆/等變結構 → 關係式驗證。
+- RAG 防摻私貨 → 先摘引再作答。
+- 需求可能有歧義 → clarify-before-act(行為比對偵測,不靠自我感覺)。
+- 動作不可逆 → dry-run + pre-mortem → sandbox-verify-commit。
+- 讀不可信內容且有工具權 → dual-LLM 隔離(必配,不是選配)。
+- 用了任何 judge → 去偏協定一律套上。
+
+## 補充三的一句話總結
+
+前 43 招優化的是「答案怎麼生、怎麼挑、怎麼驗」;這 10 招補的是系統的**邊界**——輸入端(歧義)、輸出端(棄答)、動作端(副作用)、以及驗證器自己。「回饋/驗證的客觀性」這條主線不變,只是終於也照到了裁判和邊界上。
+
+## 來源(補充三)
+
+- [PAL(arXiv:2211.10435)](https://arxiv.org/abs/2211.10435) · [Program-of-Thoughts(arXiv:2211.12588)](https://arxiv.org/abs/2211.12588) · [CRITIC(arXiv:2305.11738)](https://arxiv.org/abs/2305.11738)
+- [Verbalized Sampling(arXiv:2510.01171)](https://arxiv.org/abs/2510.01171)
+- [Detecting hallucinations using semantic entropy(Nature 2024)](https://www.nature.com/articles/s41586-024-07421-0) · [SelfCheckGPT(arXiv:2303.08896)](https://arxiv.org/abs/2303.08896)
+- [ClarifyGPT(arXiv:2310.10996,FSE 2024)](https://arxiv.org/abs/2310.10996)
+- [RAP: Reasoning via Planning(arXiv:2305.14992)](https://arxiv.org/abs/2305.14992) · [Klein, Performing a Project Premortem(HBR 2007)](https://hbr.org/2007/09/performing-a-project-premortem)
+- [CaMeL: Defeating Prompt Injections by Design(arXiv:2503.18813)](https://arxiv.org/abs/2503.18813) · [Willison, Dual LLM pattern(2023)](https://simonwillison.net/2023/Apr/25/dual-llm-pattern/)
+- [Round-Trip Correctness(ICML 2024,arXiv:2402.08699)](https://arxiv.org/abs/2402.08699) · [Metamorphic Testing of LLMs(arXiv:2511.02108)](https://arxiv.org/abs/2511.02108)
+- [Anthropic — Reduce hallucinations](https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations) · [Citations API](https://docs.anthropic.com/en/docs/build-with-claude/citations)
+- [Judging LLM-as-a-Judge / MT-Bench(arXiv:2306.05685)](https://arxiv.org/abs/2306.05685)
+- 併入既有招的補強來源:[Chain of Draft(arXiv:2502.18600)](https://arxiv.org/abs/2502.18600)(→40) · [ACE(arXiv:2510.04618)](https://arxiv.org/abs/2510.04618)(→43) · [Buffer of Thoughts(arXiv:2406.04271)](https://arxiv.org/abs/2406.04271)(→41) · [Step-Back(arXiv:2310.06117)](https://arxiv.org/abs/2310.06117)(→30)

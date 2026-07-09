@@ -88,6 +88,43 @@
 | [42 prompt optimization loop](examples/frontier/42-prompt-optimization-loop.md) | 新族 B | 迭代 prompt 而非答案；凍結的 eval set 當 oracle |
 | [43 context curation](examples/frontier/43-context-curation.md) | 新族 C+F | 每輪蒸餾狀態防 context rot；長迴圈的地基 |
 
+## 七、四個盲區的補完（2026-07 導入，44–53）
+
+前 43 招把「怎麼生、怎麼挑、怎麼驗、怎麼拆、怎麼搜」蓋得很全；[缺口研究](import-candidates.md)找出四個系統性盲區，各補上可操作範例：
+
+**盲區 1：生成端的確定性與多樣性**（既有招的外部訊號全在驗證端）
+
+| 範例 | 掛回哪一族 | 一句話 |
+|---|---|---|
+| [44 PAL / Program-of-Thoughts](examples/frontier/44-pal-program-of-thoughts.md) | 五之補（oracle 事前形態） | 會算錯的子步驟外包給直譯器，別心算 |
+| [45 verbalized sampling](examples/frontier/45-verbalized-sampling.md) | 二之補（生成端） | 要「N 個答案＋機率」破 mode collapse，候選才有多樣性可挑 |
+
+**盲區 2：「不答 / 先問」的輸出策略**（既有招全假設要交出一個答案、輸入是明確的）
+
+| 範例 | 掛回哪一族 | 一句話 |
+|---|---|---|
+| [46 一致性棄答閘](examples/frontier/46-consistency-abstention.md) | 三之補 | sample 發散＝警報：棄答 / 升級 / 標「未驗證」 |
+| [49 clarify-before-act](examples/frontier/49-clarify-before-act.md) | 五之補（互動） | 行為不一致＝需求有歧義，先問再做 |
+
+**盲區 3：副作用世界的安全控制**（既有招全活在無副作用的文字空間）
+
+| 範例 | 掛回哪一族 | 一句話 |
+|---|---|---|
+| [50 dry-run + pre-mortem](examples/frontier/50-dry-run-premortem.md) | 新族 D 可 prompt 版 | 不可逆動作前先模擬＋「假設已失敗，死因？」 |
+| [51 sandbox-verify-commit](examples/frontier/51-sandbox-verify-commit.md) | 五之補 | 交易式執行：隔離跑 → oracle 驗 → 過了才 commit |
+| [52 dual-LLM / CaMeL](examples/frontier/52-dual-llm-quarantine.md) | 三之補（guardrail 縱深） | 特權/隔離分離，讓 prompt injection 在架構上無效 |
+
+**盲區 4：驗證器自身的品質**（meta 洞察 2 吃到自己身上）
+
+| 範例 | 掛回哪一族 | 一句話 |
+|---|---|---|
+| [47 關係式驗證](examples/frontier/47-relation-based-verification.md) | 三之補 | round-trip / metamorphic：沒 ground truth 也有客觀訊號 |
+| [48 quote-grounded](examples/frontier/48-quote-grounded.md) | 三之補（27 姊妹） | 先逐字摘引再作答，幻覺在結構上寫不出來 |
+| [53 judge 去偏協定](examples/frontier/53-judge-debias.md) | 二/三之補（衛生規範） | 換位 ×2、盲評、judge≠generator——先修裁判再信裁決 |
+
+同積木三用途的家族線：[06](examples/06-self-consistency.md) 挑答案 / [46](examples/frontier/46-consistency-abstention.md) 拉警報 / [49](examples/frontier/49-clarify-before-act.md) 測歧義。
+不可逆動作的閘門鏈：[49](examples/frontier/49-clarify-before-act.md)（題目對嗎）→ [50](examples/frontier/50-dry-run-premortem.md)（後果可接受嗎）→ [51](examples/frontier/51-sandbox-verify-commit.md)（真執行也能回滾）。
+
 ---
 
 ## 怎麼選（決策樹）
@@ -108,6 +145,14 @@
 - 迴圈會超過 ~5 輪 → 必配 [context curation](examples/frontier/43-context-curation.md)（每輪蒸餾），否則 context rot 吃掉一切增益。
 - 同類任務會重複出現 → [skill library](examples/frontier/41-skill-library.md)，oracle 認證過才入庫。
 - prompt 本身是長期資產 → [prompt optimization loop](examples/frontier/42-prompt-optimization-loop.md)。
+- 子步驟含算術 / 可程式化邏輯 → [44 PAL](examples/frontier/44-pal-program-of-thoughts.md)：外包給直譯器，別心算。
+- generate-then-select 但候選都長一樣 → [45 verbalized sampling](examples/frontier/45-verbalized-sampling.md) 先把多樣性生出來。
+- 沒 oracle、怕幻覺、寧可不答 → [46 一致性棄答閘](examples/frontier/46-consistency-abstention.md)；任務有可逆/等變結構 → [47 關係式驗證](examples/frontier/47-relation-based-verification.md)。
+- RAG 答案要防摻私貨 → [48 先摘引再作答](examples/frontier/48-quote-grounded.md)。
+- 需求可能有歧義 → [49 clarify-before-act](examples/frontier/49-clarify-before-act.md)（行為不一致＝該問了）。
+- 動作不可逆 → [50 先模擬 + pre-mortem](examples/frontier/50-dry-run-premortem.md)，再進 [51 sandbox-verify-commit](examples/frontier/51-sandbox-verify-commit.md)。
+- agent 讀不可信內容且有工具權 → [52 dual-LLM 隔離](examples/frontier/52-dual-llm-quarantine.md)。
+- 用了任何 judge（07/08/09/33）→ 一律套 [53 去偏協定](examples/frontier/53-judge-debias.md)。
 
 ## 三個要記住的 meta 洞察
 
@@ -122,7 +167,7 @@
 來源文件也涵蓋了一些**不是「寫一個 prompt」就能落地**的概念——它們是訓練方法、系統架構或研究方向，硬編成「prompt 範例」會誤導。這裡誠實列出並指回來源，而不是為湊數而虛構範例：
 
 - **Constitutional AI / RLAIF**：把 self-refine 搬到**訓練期**，回饋來自明文憲法。（[三之補(2)](agentic-loop.md)）— 其**工程即時版**才是可 prompt 的 [guardrail feedback loop](examples/frontier/34-guardrail-feedback-loop.md)。
-- **World models / co-evolving**：agent 自帶能想像後果的模擬器，尚在研究期。（[新族 D](agentic-loop.md)）
+- **World models / co-evolving**：agent 自帶能想像後果的模擬器，訓練期形態尚在研究期。（[新族 D](agentic-loop.md)）— 其**工程即時版**已可落地：[50 dry-run + pre-mortem](examples/frontier/50-dry-run-premortem.md)（讓模型在不可逆動作前當一次世界模型）。
 - **PRM / process reward、generative verifier**：屬驗證器/獎勵模型的訓練與設計；其精神已體現在 [until oracle passes](examples/05-until-oracle-passes.md)（逐步驗證）與 [rubric judge](examples/frontier/33-rubric-based-judge.md)。
 
 四個原本列在這裡的概念（reasoning models 的 effort 旋鈕、DSPy/OPRO 式自動優化、Voyager skill library、sleep-time/context 策展）已各自有**orchestration 層的可操作版**，移入上方[第六族](#六meta--系統層算力配置與跨任務在-agent-runtime-可落地的)——訓練期的原始形態仍以 [agentic-loop.md](agentic-loop.md) 為準。

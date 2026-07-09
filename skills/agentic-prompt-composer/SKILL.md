@@ -1,6 +1,6 @@
 ---
 name: agentic-prompt-composer
-description: Compose a robust agentic prompt or orchestration by selecting and stacking LLM control-structure primitives (loop-until-oracle, self-consistency, best-of-N, adversarial-verify, map-reduce, ReAct, ReWOO, and ~30 more). Output is a markdown prompt/spec. Use when the user wants to DESIGN or STRENGTHEN a prompt/agent/pipeline — e.g. "help me write a prompt that reliably does X", "組合一個 agentic prompt", "which prompting technique for Y", "make this prompt more reliable / stop it hallucinating", "design an agent loop / pipeline / review workflow for Z", "how should I structure the orchestration for W". Do NOT use for one-shot trivial prompts, for prose polishing (that's english-polish), or for explaining existing code (that's explain-code).
+description: Compose a robust agentic prompt or orchestration by selecting and stacking LLM control-structure primitives (loop-until-oracle, self-consistency, best-of-N, adversarial-verify, map-reduce, ReAct, ReWOO, and ~40 more). Output is a markdown prompt/spec. Use when the user wants to DESIGN or STRENGTHEN a prompt/agent/pipeline — e.g. "help me write a prompt that reliably does X", "組合一個 agentic prompt", "which prompting technique for Y", "make this prompt more reliable / stop it hallucinating", "design an agent loop / pipeline / review workflow for Z", "how should I structure the orchestration for W". Do NOT use for one-shot trivial prompts, for prose polishing (that's english-polish), or for explaining existing code (that's explain-code).
 ---
 
 # Agentic Prompt Composer
@@ -24,6 +24,7 @@ Follow these five steps in order. Do not skip step 1.
 - **Size?** Fits one context, or too big (long doc, whole codebase)?
 - **Interaction?** Needs to observe the environment mid-task (debug, browse), or fully plannable up front?
 - **Horizon & recurrence?** Will the loop run long (> ~5 rounds → needs context curation)? Will this task class recur (→ skill library)? Is the prompt itself the long-lived artifact (→ prompt-optimization loop)?
+- **Edges?** Could the requirement be ambiguous (→ clarify-before-act)? Are any actions irreversible (→ dry-run + sandbox)? Does the agent read untrusted content while holding tools (→ dual-LLM quarantine)? Is abstaining better than a wrong answer (→ consistency abstention gate)?
 
 ### 2. Select primitives
 
@@ -46,6 +47,13 @@ Map the diagnosis to primitives using [references/catalog.md](references/catalog
 | Reasoning model available | try the **reasoning-effort knob** first (one call, higher effort) before hand-rolling loops; tier effort per stage |
 | Long horizon (> ~5 rounds) | add **context-curation** (per-round distill) — mandatory, not optional |
 | Task class recurs / prompt is a long-lived asset | **skill-library** / **prompt-optimization loop** |
+| Computable sub-steps (arithmetic, dates, counting) | **PAL / program-of-thoughts** — interpreter, not mental math |
+| Candidates all look alike before selection | **verbalized-sampling** (N answers + probabilities) |
+| No oracle + wrong answer costlier than no answer | **consistency-abstention gate**; invertible structure → **relation-based verification** |
+| Requirement possibly ambiguous | **clarify-before-act** (behavioral divergence detects it) |
+| Irreversible action | **dry-run + pre-mortem** → **sandbox-verify-commit** |
+| Reads untrusted content + holds tools | **dual-LLM / CaMeL quarantine** — mandatory |
+| Any judge in the stack | **judge-debias protocol** (swap ×2, blind, judge ≠ generator) — always-on hygiene |
 
 ### 3. Stack them
 
@@ -82,10 +90,11 @@ Check the composed prompt against [references/composition-guide.md](references/c
 
 Each primitive has a full example (prompt + why-it-works + pitfalls) in this repo:
 
-- Index of all 43 techniques: [../../index.md](../../index.md)
+- Index of all 53 techniques: [../../index.md](../../index.md)
 - Core families (loop / generate-then-select / adversarial / decompose / search): [../../examples/](../../examples/)
 - Frontier patterns (MoA, ReWOO, CoVe, agentic-RAG, rubric-judge, …): [../../examples/frontier/](../../examples/frontier/)
 - Meta / system-level (reasoning-effort, skill-library, prompt-optimization, context-curation): examples 40–43 in [../../examples/frontier/](../../examples/frontier/)
+- Boundary & verifier-quality (PAL, verbalized-sampling, abstention, relation-verify, quote-grounding, clarify, dry-run, sandbox, dual-LLM, judge-debias): examples 44–53 in [../../examples/frontier/](../../examples/frontier/)
 - Underlying theory + sources: [../../agentic-loop.md](../../agentic-loop.md)
 
 When the user asks "why does technique X work" or wants to go deeper on one primitive, read its example file rather than re-deriving.

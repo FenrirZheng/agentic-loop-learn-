@@ -46,6 +46,22 @@ The full picker. Each row links to its deep-dive example (prompt + why-it-works 
     → [skill library](../../../examples/frontier/41-skill-library.md) (Voyager-style): distill oracle-passed artifacts into retrievable recipes; entry gate = oracle-passed only.
 21. **The prompt itself is the long-lived artifact** (production pipeline, skill, system prompt)
     → [prompt-optimization loop](../../../examples/frontier/42-prompt-optimization-loop.md) (OPRO-lite: frozen eval set as oracle, propose-from-scored-history, held-out validation).
+22. **Sub-steps are programmable** (arithmetic, dates, counting, string ops)
+    → [PAL / program-of-thoughts](../../../examples/frontier/44-pal-program-of-thoughts.md) — outsource to an interpreter; never let the model mental-math. Tool-ground every self-critique (CRITIC).
+23. **Generate-then-select but candidates all look alike** (mode collapse)
+    → [verbalized sampling](../../../examples/frontier/45-verbalized-sampling.md) — ask for N answers + probabilities, force the distribution's tail, THEN select.
+24. **No oracle, hallucination-risky, abstaining beats a wrong answer**
+    → [consistency abstention gate](../../../examples/frontier/46-consistency-abstention.md) (semantic-cluster N samples; scattered = abstain/escalate). Task has invertible/equivariant structure → [relation-based verification](../../../examples/frontier/47-relation-based-verification.md) (round-trip / metamorphic).
+25. **RAG answer must not smuggle in un-sourced claims**
+    → [quote-grounded generation](../../../examples/frontier/48-quote-grounded.md) (verbatim quotes first — substring-checkable — then answer only from quotes).
+26. **Requirement may be ambiguous**
+    → [clarify-before-act](../../../examples/frontier/49-clarify-before-act.md) (n independent implementations diverge on an input = objective ambiguity evidence; ask targeted questions with options).
+27. **Action is irreversible** (delete, deploy, send, spend)
+    → [dry-run + pre-mortem](../../../examples/frontier/50-dry-run-premortem.md) first, then execute inside [sandbox-verify-commit](../../../examples/frontier/51-sandbox-verify-commit.md) (isolate → oracle → merge or discard).
+28. **Agent reads untrusted content AND holds tool access**
+    → [dual-LLM / CaMeL quarantine](../../../examples/frontier/52-dual-llm-quarantine.md) — privileged planner never sees raw untrusted data; quarantined extractor has zero tool rights. Mandatory, not optional.
+29. **Any judge anywhere in the stack** (best-of-N, tournament, panel, rubric, evaluator)
+    → apply [judge-debias protocol](../../../examples/frontier/53-judge-debias.md) (position-swap ×2 with tie-on-disagreement, judge ≠ generator, blind, anchored rubric). Hygiene, always-on.
 
 ## Full primitive table
 
@@ -117,3 +133,17 @@ The full picker. Each row links to its deep-dive example (prompt + why-it-works 
 | skill library | distill oracle-passed artifacts into reusable recipes; compounding across tasks | [41](../../../examples/frontier/41-skill-library.md) |
 | prompt-optimization loop | iterate the prompt (not the answer) against a frozen eval set | [42](../../../examples/frontier/42-prompt-optimization-loop.md) |
 | context curation | per-round distill (verified / dead-ends / open); externalize state; sleep-time pre-digest | [43](../../../examples/frontier/43-context-curation.md) |
+
+### Boundary & verifier-quality (input / output / action edges, and the judge itself)
+| Primitive | Idea | Example |
+|---|---|---|
+| PAL / program-of-thoughts | outsource computable sub-steps to an interpreter; tool-ground critiques | [44](../../../examples/frontier/44-pal-program-of-thoughts.md) |
+| verbalized sampling | "N answers + probabilities" to break mode collapse before selecting | [45](../../../examples/frontier/45-verbalized-sampling.md) |
+| consistency abstention gate | semantic scatter across samples = abstain / escalate / tag unverified | [46](../../../examples/frontier/46-consistency-abstention.md) |
+| relation-based verification | round-trip & metamorphic relations as objective, oracle-free signal | [47](../../../examples/frontier/47-relation-based-verification.md) |
+| quote-grounded generation | verbatim quotes first (substring-checkable), answer only from quotes | [48](../../../examples/frontier/48-quote-grounded.md) |
+| clarify-before-act | behavioral divergence detects ambiguity; ask targeted options-questions | [49](../../../examples/frontier/49-clarify-before-act.md) |
+| dry-run + pre-mortem | simulate consequences + "it already failed — why?" before irreversible acts | [50](../../../examples/frontier/50-dry-run-premortem.md) |
+| sandbox-verify-commit | transactional execution: isolate → oracle → merge-or-discard | [51](../../../examples/frontier/51-sandbox-verify-commit.md) |
+| dual-LLM / CaMeL quarantine | privileged planner ∥ tool-less extractor; injection has nowhere to act | [52](../../../examples/frontier/52-dual-llm-quarantine.md) |
+| judge-debias protocol | position-swap ×2, judge ≠ generator, blind, anchored rubric | [53](../../../examples/frontier/53-judge-debias.md) |

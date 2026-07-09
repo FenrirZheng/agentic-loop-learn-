@@ -1,5 +1,7 @@
 # 方法論導入候選研究（2026-07-09）
 
+> **狀態：已執行（2026-07-09）。** Tier 1 十招已落地為 [examples/frontier/](examples/frontier/) 44–53；Tier 2 七項已併入對應範例（40/43/41/30/36/16）；[index.md 第七族](index.md#七四個盲區的補完2026-07-導入4453)、[agentic-loop.md 補充三](agentic-loop.md)、composer 的 [catalog](skills/agentic-prompt-composer/references/catalog.md) 與 [SKILL.md](skills/agentic-prompt-composer/SKILL.md) 均已同步。本文件保留為缺口分析的依據與 Tier 3 的「勿重複評估」清單。
+
 研究「除了現有 43 招之外，還有哪些方法論可以導入本範例集」。方法：先盤點 [index.md](index.md) 的 43 招涵蓋範圍，找出缺口；候選逐一與現有招比對排除重疊；2024–2026 的新方法用 web 搜尋逐一核實來源（下列 arXiv 編號皆已驗證，非憑記憶）。
 
 **入選標準**（沿用本範例集既有原則）：

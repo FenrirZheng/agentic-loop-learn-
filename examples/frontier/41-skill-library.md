@@ -36,6 +36,11 @@ Claude Code 的落地形式：`.claude/skills/` 目錄本身就是 skill library
 - **把 test-time 花的算力變成資產**：一次 R2（until-oracle-passes）迴圈花掉的修錯過程，蒸餾後讓同類任務直接跳過那些坑——這是唯一會**複利**的招數。
 - **PITFALLS 是最高價值欄位**：通用步驟網路上到處有，「這個 codebase / 這類任務真實踩過的坑」只有你的迴圈知道。
 
+## 兩個變體：換「沉澱什麼」
+
+- **推理模板庫（Buffer of Thoughts）**：沉澱的不是任務級 recipe，而是**解題結構**（thought-template：「這類題先拆 X 再驗 Y」），檢索後實例化到新題。粒度更細、跨域更廣——recipe 教「怎麼做這件事」，模板教「怎麼想這類題」。
+- **失敗庫（anti-pattern library）**：41 的鏡像——除了沉澱「驗證通過的作法」，也沉澱「驗證失敗的死法」（PITFALLS 欄位的獨立升級版），餵給後續任務當反面 few-shot。入庫門檻同樣客觀：真的失敗過、有失敗證據，不是想像的風險。
+
 ## 什麼時候用 / 不要用
 
 - ✅ 同類任務會重複出現（部署、遷移、審計、同框架的 CRUD……）。
@@ -52,4 +57,5 @@ Claude Code 的落地形式：`.claude/skills/` 目錄本身就是 skill library
 ## 來源對應
 
 - [agentic-loop.md 新族 E](../../agentic-loop.md) — Voyager:自動課程、skill library、環境回饋迭代;「存進 library 的都是被 oracle 認證過的」。
-- 互補:[until oracle passes](../05-until-oracle-passes.md)(入庫門檻)、[agentic RAG](27-agentic-rag.md)(檢索端)。
+- [Buffer of Thoughts（arXiv:2406.04271，NeurIPS 2024）](https://arxiv.org/abs/2406.04271) — thought-template 的檢索與實例化。
+- 互補:[until oracle passes](../05-until-oracle-passes.md)(入庫門檻)、[agentic RAG](27-agentic-rag.md)(檢索端)、[context curation](43-context-curation.md)(失敗庫的 DEAD-ENDS 是它的單任務版)。

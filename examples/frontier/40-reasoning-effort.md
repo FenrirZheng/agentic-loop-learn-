@@ -47,6 +47,17 @@ effort 調高後若仍答錯,先跑一次「effort=high 的單發」vs「effort=
 - ❌ 任務本身簡單，高 effort 只是變慢變貴。
 - ❌ 以為 effort 調高就不需要外部驗證——內部自評仍會自信地錯。
 
+## 第二顆旋鈕：Chain-of-Draft（effort 調「想多久」，CoD 調「寫多短」）
+
+沒有 effort 旋鈕、或想再往下壓成本時，還有一顆正交的旋鈕——限制**每步推理的長度**：
+
+```text
+逐步思考，但每一步的草稿不超過 5 個詞（只留關鍵運算/關鍵詞，不寫完整句子）。
+最後一行輸出 FINAL: <答案>。
+```
+
+實測 token 降到 CoT 的 **7.6%** 而準度相當（數學/常識推理）——大部分 CoT token 是給人看的敘述，不是推理本身。兩顆旋鈕組合：effort 決定內部思考預算，CoD 決定外顯草稿密度；先單獨量測，別直接疊滿。
+
 ## 陷阱
 
 - **全域調高**：每個呼叫都 xhigh 等於沒有分層；預設繼承 session，只在最難的節點升。
@@ -56,4 +67,5 @@ effort 調高後若仍答錯,先跑一次「effort=high 的單發」vs「effort=
 ## 來源對應
 
 - [agentic-loop.md 新族 A](../../agentic-loop.md) — reasoning models、RLVR、「調 effort 而非自己疊迴圈,但仍需外部 oracle」。
+- [Chain of Draft: Thinking Faster by Writing Less（arXiv:2502.18600）](https://arxiv.org/abs/2502.18600) — 每步 ≤5 詞的簡潔推理。
 - 互補:[cascade routing](36-cascade-routing.md)(橫向換模型)、[until oracle passes](../05-until-oracle-passes.md)(外層必包)。

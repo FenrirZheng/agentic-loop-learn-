@@ -27,6 +27,7 @@
 - **Subagent 隔離**（最重要）：大搜尋/大驗證丟給 subagent 在獨立 context 跑，主線只收結論——見 [35](35-subagent-context-isolation.md)。
 - **外部化**：狀態寫進檔案（`notes.md`、TODO list），context 裡只留指標；要用時再讀回來（memory-as-action）。
 - **Sleep-time 預消化**：可預讀的持久 context（codebase、歷史對話）趁閒置先蒸餾成 learned context，熱路徑直接用——排程 agent / cron 就是它的落地形式。
+- **增量 delta 更新（ACE）**：長期維護的 playbook / 系統 prompt **不要整份重寫**——重寫會 **context collapse**（每代重寫都掉一點細節，越縮越空洞）。改用 grow-and-refine：每輪只「新增 / 修訂 / 標記過期」具體條目，保留其餘原文。實測 agent 任務 +10.6%。
 
 ## 為什麼這樣做可以
 
@@ -51,4 +52,5 @@
 
 - [agentic-loop.md 新族 C](../../agentic-loop.md) — context pruning、trajectory compression、memory-as-action、外部記憶;「主動策展 context」。
 - [agentic-loop.md 新族 F](../../agentic-loop.md) — sleep-time compute:閒置時把 raw context 消化成 learned context（~1/5 token、+15% 正確率）。
+- [Agentic Context Engineering（ACE，arXiv:2510.04618）](https://arxiv.org/abs/2510.04618) — brevity bias 與 context collapse 的診斷；增量 delta 的 grow-and-refine 解法。
 - 互補:[subagent context 隔離](35-subagent-context-isolation.md)(結構性隔離)、[map-reduce](../16-map-reduce.md)(digest 而非原文往上傳)。

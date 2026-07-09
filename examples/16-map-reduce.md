@@ -39,6 +39,10 @@ Reduce（拿到所有片段結果後一次呼叫）：
 - ✅ 想用平行度換 wall-clock。
 - ❌ 分片之間有強依賴、必須循序（片 B 要先知道片 A 結論）——那用 [pipeline](17-pipeline.md) 或 [Least-to-Most](frontier/29-least-to-most.md)。
 
+## 拓撲對照：blackboard（共享黑板）
+
+map-reduce 的協調是「切片時一次決定」；當**子任務間需要看到彼此的中間進展**（誰先解出一塊、其他人接著用）時，第三種多 agent 拓撲是 **blackboard**：所有 agent 共讀共寫一塊黑板（共享檔案 / 狀態文件），誰有進展誰寫上去，其他 agent 據此決定下一步；沒有中央 orchestrator 指派。適合「解的結構事先不知道、要靠拼圖湧現」的問題（破譯、跨域診斷）。代價是黑板本身會腐化——需要一個 curator 定期整理（見 [43 context curation](frontier/43-context-curation.md)），且併發寫入要有規約。事先能切乾淨就用 map-reduce，別為了時髦上 blackboard。
+
 ## 陷阱
 
 - **切片邊界會切斷語意**：跨片的因果/指代會被切開。可讓相鄰片重疊一小段，或在 reduce 特別留意跨片關係。
