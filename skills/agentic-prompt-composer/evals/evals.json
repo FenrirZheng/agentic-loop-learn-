@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Help me write a prompt that finds all the concurrency bugs in this Go service and only reports the ones that are actually real.",
-      "expected_output": "A composed orchestration diagnosing: no free oracle for 'is this a real race', fear = both missing (long tail) and false-positives. Should select loop-until-dry (fan-out finders with diverse lenses + SEEN dedup) stacked with adversarial-verify (N default-refute skeptics, majority drops) and an aggregator, matching recipe R1. Must include an explicit stop condition (K dry rounds) and a why-this-composition note naming each primitive.",
+      "expected_output": "A composed orchestration diagnosing: a PARTIAL oracle exists (`go test -race` catches reproducible races) and should be wrapped as the verification signal where it applies, per the oracle-first rule; fear = both missing (long tail) and false-positives. For the remainder the race detector cannot reproduce, should select loop-until-dry (fan-out finders with diverse lenses + SEEN dedup) stacked with adversarial-verify (N default-refute skeptics, majority drops) and an aggregator, matching recipe R1. Must include an explicit stop condition (K dry rounds) and a why-this-composition note naming each primitive. An answer that ignores the race detector entirely, or one that treats it as a complete oracle for all concurrency bugs, both miss the diagnosis.",
       "files": [],
       "complexity": "medium"
     },
