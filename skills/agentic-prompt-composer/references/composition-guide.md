@@ -11,6 +11,7 @@ How to combine primitives well, and the mistakes to refuse to ship.
 5. **Prefer a workflow to an agent.** If you can write the control path as fixed code (chaining, routing, parallel, orchestrator-workers), do that — predictable, testable, cheap. Reserve agents for when the next step genuinely depends on runtime observation.
 6. **Isolate expensive subtasks.** Big searches/verifications go in a subagent that returns only its conclusion, keeping the main context clean (no context rot on long runs).
 7. **Match verifier diversity to failure modes.** If a claim can fail in several ways, give each verifier a distinct lens (correctness / security / does-it-reproduce) instead of N identical skeptics.
+8. **Contract every joint.** At each stage boundary of a multi-stage spec, name (a) the exact artifact passed — fields, format, the same skeleton the upstream output contract promises — and (b) the failure path: what the orchestrator does when a stage returns empty / null / unparseable (retry once, drop-and-log, or abort — pick one, per joint). Happy-path-only compositions break at their joints, silently, and the downstream stage hallucinates the missing input.
 
 ## Anti-patterns
 
@@ -44,5 +45,7 @@ When unsure, bias toward the simpler option:
 - Could a single higher-effort call replace this hand-rolled loop (reasoning-effort knob), and is effort tiered per stage rather than raised globally?
 - If the loop will run long (> ~5 rounds), is context curation (per-round distill / subagent isolation) built in?
 - Are cost bounds fail-closed and is dropped scope logged?
+- Does every stage boundary name its passed artifact and its failure path (empty / null / unparseable)?
 - Does the emitted prompt text pass the [prompt-quality smell test](prompt-quality.md#emitted-prompt-smell-test) (output contract, stance, escape hatch, reasoned prohibitions)?
+- **Dry-run**: walk the prompt once against a toy input — every placeholder has a filler in the runner manifest, every procedure step produces its observable result, and the declared output of each stage is parseable by the stage that consumes it. A prompt that fails its own walkthrough fails in production.
 - Did I name each primitive used and the diagnosis that selected it?

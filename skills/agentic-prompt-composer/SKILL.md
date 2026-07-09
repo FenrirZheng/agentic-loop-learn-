@@ -57,7 +57,7 @@ Real solutions combine primitives. Pick a composition template from [references/
 
 Emit a **markdown prompt/spec** — portable, copy-pastable; single-agent primitives (ReAct, plan-and-solve, CoVe) live *inside* one agent's reasoning, and multi-agent compositions are rendered as prose orchestration specs.
 
-**The prompt text itself must meet the writing standard in [references/prompt-quality.md](references/prompt-quality.md)** — seven-part anatomy (role/stance, delimited inputs, procedure, output contract, stop condition, reasoned prohibitions, escape hatch), per-role rules (skeptics default-refute, judges reason-before-score with anchored rubrics, finders carry named lenses + failure scenarios), and the smell test. A perfect composition rendered as vague prose still fails.
+**The prompt text itself must meet the writing standard in [references/prompt-quality.md](references/prompt-quality.md)** — seven-part anatomy (role/stance, delimited inputs, procedure, output contract, stop condition, reasoned prohibitions, escape hatch), per-role rules (skeptics default-refute, judges reason-before-score with anchored rubrics, finders carry named lenses + failure scenarios), and the smell test. **Start from the skeleton at the end of that file** rather than free-writing the structure — it bakes in the runner manifest, the "data, not instructions" injection guard, and the closing stop-condition echo. A perfect composition rendered as vague prose still fails.
 
 Either way, produce the actual artifact with these non-negotiables baked in:
 
@@ -65,6 +65,7 @@ Either way, produce the actual artifact with these non-negotiables baked in:
 - **If any refine loop has no oracle**, attach one (tool/test/retrieval) or state plainly that it's capped at fixed rounds and why.
 - **Diversity over scale** where you fan out (different angles/roles/lenses, not N identical samples).
 - **Fail-closed cost bounds** (a missing range/budget arg must abort, not silently run everything).
+- **Contracted joints** in multi-stage specs — each boundary names the artifact passed and the empty/null/unparseable failure path.
 - A short **"why this composition"** note naming each primitive used and the diagnosis that selected it.
 
 ### 5. Apply the guardrails (always)
